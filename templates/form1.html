@@ -1,0 +1,46 @@
+{% extends "base_menu.html" %}
+{% block title %}form1{% endblock %}
+
+{% block content %}
+  <h4>Attendance register</h4>
+  <p class="important">
+    Welcome to the attendance register - Flask app.
+  </p>
+
+  <hr>
+
+  <h2>Classic HTML Form</h2>
+  <p>This form uses basic <code>&lt;form&gt;</code>, <code>&lt;label&gt;</code>, and <code>&lt;input&gt;</code> tags without Bootstrap styling.</p>
+
+  <form action="#" method="post">
+    <fieldset>
+        <h5>Podaj swoje dane</h5>
+        
+        <p>
+          <label for="imie_classic">Imię:</label><br>
+          <input type="text" id="imie_classic" name="imie" required>
+        </p>
+
+        <p>
+          <label for="nazwisko_classic">Nazwisko:</label><br>
+          <input type="text" id="nazwisko_classic" name="nazwisko" required>
+        </p>
+        
+        <p>
+          <label for="album_classic">Numer albumu:</label><br>
+          <input type="number" id="album_classic" name="numer_albumu" required>
+        </p>
+
+        <p>
+          <label for="uwagi_classic">Uwagi (max 100 znaków):</label><br>
+          <textarea id="uwagi_classic" name="uwagi" maxlength="100" rows="3" cols="40"></textarea>
+        </p>
+
+        <input type="submit" value="Zapisz">
+    </fieldset>
+  </form>
+
+  <hr>
+
+ 
+{% endblock %}

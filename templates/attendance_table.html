@@ -1,0 +1,34 @@
+{% extends "base_menu.html" %}
+{% block title %}Attendance Register{% endblock %}
+{% block content %}
+
+  <p>{{message}}<p>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>First Name (Imię)</th>
+          <th>Last Name (Nazwisko)</th>
+          <th>Album Number</th>
+          <th>Notes (Uwagi)</th>
+          <th>Timestamp</th>
+          <th>Nazwa przedmiotu</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td>{{ r.id }}</td>
+          <td>{{ r.imie }}</td>
+          <td>{{ r.nazwisko }}</td>
+          <td>{{ r.numer_albumu }}</td>
+          <td>{{ r.uwagi }}</td>
+          <td>{{ r.timestamp }}</td>
+          <td>{{ r.przedmiot }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

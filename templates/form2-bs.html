@@ -1,0 +1,69 @@
+{% extends "base_menu.html" %}
+{% block title %}form1{% endblock %}
+
+{% block content %}
+  <p class="important">
+  </p>
+  
+  <h4>Register attendance</h4>
+
+
+  <hr>
+
+  <form action="#" method="post">
+    <fieldset>
+    
+
+        <div class="col-md-6 mt-2">
+          <label for="przedmiot_bs" class="form-label form-label-subtle mb-0">Przedmiot:</label>
+          <select id="przedmiot_bs" name="przedmiot_data" class="form-control" >
+            {% for s in subjects %}
+                <option value='{{s|tojson|e}}'>{{s.przedmiot}}</option>
+            {% endfor %}
+          </select>
+        </div>
+                  
+        <div class="col-md-6 mt-2">
+          <label for="imie_bootstrap" class="form-label form-label-subtle mb-0">Imię</label>
+          <input type="text" class="form-control" id="imie_bs" name="imie" placeholder="np. Jan" required>
+        </div>
+
+        <div class="col-md-6 mt-2">
+          <label for="nazwisko_bootstrap" class="form-label form-label-subtle mb-0">Nazwisko</label>
+          <input type="text" class="form-control" id="nazwisko_bs" name="nazwisko" placeholder="np. Kowalski" required>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3 mt-2">
+                <label for="album_bootstrap" class="form-label form-label-subtle mb-0">Numer albumu</label>
+                <input type="number" class="form-control" id="album_bs" name="numer_albumu" placeholder="np. 12345" required>
+            </div>
+    
+            <div class="col-md-3 mt-2">
+                <label for="attdate_bootstrap" class="form-label form-label-subtle mb-0">Att date</label>
+                <input type="date" class="form-control" id="attdate_bs" name="att_date" placeholder="dd.mm.yyyy">
+            </div>
+        </div>
+        
+        <div class="col-md-6 mt-2">
+            <label for="uwagi_bootstrap" class="form-label form-label-subtle mb-0">Uwagi (max 100 znaków)</label>
+            <textarea class="form-control" id="uwagi_bs" name="uwagi" rows="3" maxlength="100"></textarea>
+        </div>
+
+        
+        <!-- Button Alignment Section (Full width, text aligned right) -->
+        <div class="col-md-6 text-center">
+            <!-- CANCEL Button: We make this a non-submitting button that links back -->
+            <!-- Assuming you have a route named 'index' for your home page -->
+            <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3 me-2">Anuluj</a>
+            
+            <!-- SAVE Button: We give it a name and value to check in Python -->
+            <button type="submit" name="action" value="save" class="btn btn-primary mt-3">Zapisz</button>
+        </div>
+        
+        
+        
+    </fieldset>
+  </form>
+
+{% endblock %}

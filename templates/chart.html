@@ -1,0 +1,74 @@
+{% extends 'base_menu.html' %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<h1>{% block title %} Charts {% endblock %}</h1>
+
+<div class="container">
+    <div class="container-fluid">
+       <div class="row">
+
+         <div class="col-md-5 border rounded" style="margin: 2px !important;">                      
+            <canvas id="myChart1"></canvas>
+          </div> 
+            
+          <div class="col-md-5 border rounded" style="margin: 2px !important;">
+              <canvas id="myChart2"></canvas>
+          </div>
+        
+       </div>
+    </div>
+            
+            <script>
+            
+            // chart myChart2       
+              const labels = {{ labels | tojson}};
+              const data = {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sales',
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: {{ data | tojson}},
+                    }]
+                };            
+
+              const config = {
+                type: 'bar',
+                data: data,
+                options: { maintainAspectRatio: false }
+                };
+                
+               const myChart = new Chart(
+                    document.getElementById('myChart2'),
+                    config
+                ); 
+            
+
+            // chart myChart1                    
+              const ctx = document.getElementById('myChart1');
+              new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                  datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                  }]
+                },
+                options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true
+                    }
+                  }
+                }
+              });
+            </script>
+
+</div>
+{% endblock %} 
+    
+    
+    

@@ -1,0 +1,85 @@
+{% extends "base_menu.html" %}
+{% block title %}form1{% endblock %}
+
+{% block content %}
+  <p class="important">
+  </p>
+  
+  <h4>Register attendance</h4>
+
+
+  <hr>
+
+  <form action="#" method="post">
+    <fieldset>
+    
+
+        <div class="mb-3 col-md-6">
+          <label for="przedmiot_bs" class="form-label">Przedmiot:</label>
+          <!-- select's value is the CLASSES.id; we store name and przedmiot_id in hidden inputs -->
+          <select id="przedmiot_bs" name="class_select" class="form-control" required>
+            {% for s in subjects %}
+                <option value="{{ s.id }}"
+                        data-przedmiot-id="{{ s.przedmiot_id }}"
+                        data-przedmiot-name="{{ s.przedmiot }}">{{ s.przedmiot }}</option>
+            {% endfor %}
+          </select>
+
+          <!-- Hidden fields that will be submitted -->
+          <input type="hidden" name="przedmiot" id="przedmiot_input" value="">
+          <input type="hidden" name="przedmiot_id" id="przedmiot_id_input" value="">
+          <input type="hidden" name="class_id" id="class_id_input" value="">
+        </div>
+                  
+        <div class="mb-3 col-md-6">
+          <label for="imie_bootstrap" class="form-label">Imię</label>
+          <input type="text" class="form-control" id="imie_bs" name="imie" placeholder="np. Jan" required>
+        </div>
+
+        <div class="mb-3 col-md-6">
+          <label for="nazwisko_bootstrap" class="form-label">Nazwisko</label>
+          <input type="text" class="form-control" id="nazwisko_bs" name="nazwisko" placeholder="np. Kowalski" required>
+        </div>
+
+        <div class="mb-3 col-md-6">
+            <label for="album_bootstrap" class="form-label">Numer albumu</label>
+            <input type="number" class="form-control" id="album_bs" name="numer_albumu" placeholder="np. 12345" required>
+        </div>
+
+        <div class="mb-3 col-md-6">
+            <label for="uwagi_bootstrap" class="form-label">Uwagi (max 100 znaków)</label>
+            <textarea class="form-control" id="uwagi_bs" name="uwagi" rows="3" maxlength="100"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Zapisz</button>
+    </fieldset>
+  </form>
+
+
+  <script>
+    // On page load and whenever the select changes, copy the selected option's
+    // data attributes into the three hidden inputs so they are submitted.
+    (function() {
+      const select = document.getElementById('przedmiot_bs');
+      const nameInput = document.getElementById('przedmiot_input');
+      const pidInput = document.getElementById('przedmiot_id_input');
+      const cidInput = document.getElementById('class_id_input');
+
+      function updateHiddenFields() {
+        const opt = select.options[select.selectedIndex];
+        if (!opt) return;
+        nameInput.value = opt.dataset.przedmiotName || '';
+        pidInput.value = opt.dataset.przedmiotId || '';
+        cidInput.value = opt.value || '';
+      }
+
+      select.addEventListener('change', updateHiddenFields);
+      // initialize on load
+      updateHiddenFields();
+    })();
+  </script>
+
+
+
+
+{% endblock %}

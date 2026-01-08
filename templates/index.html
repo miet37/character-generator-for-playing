@@ -1,0 +1,99 @@
+{% extends "base_menu.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block content %}
+  <h1>Attendance register</h1>
+  
+  <img src="{{ url_for('static', filename='media/register-now.jpg') }}" ... />
+
+        <h5>News from Ars Technica</h5>  
+    
+        {% if items %}
+            <ul>
+                {% for item in items %}
+                    <li class="list-group-item mt-2">
+                        
+                        <a href="{{ item.link }}" target="_blank">
+                            {{ item.title }}
+                        </a>
+                        
+                        {% if item.published %}
+                            <p class="text-muted small my-0">
+                                Published: {{ item.published }}
+                            </p>
+                        {% endif %}
+                        
+                        {% if item.summary %}
+                            <p class="text-dark small my-0">
+                                {{ item.summary | safe }}
+                            </p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    
+    
+    <div class="text-muted">
+        Source: Ars Technica RSS Feed
+    </div>
+   
+
+  
+
+
+<!--  
+    <div class="container my-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light text-primary">
+                <h4 class="mb-0 fw-bold">📰 News from Ars Technica</h4>
+            </div>
+            
+            <div class="card-body p-0">
+                {% if items %}
+                    <ul class="list-group list-group-flush">
+                        {% for item in items %}
+                            <li class="list-group-item">
+                                <h6 class="mb-1 fw-bold">
+                                    <a href="{{ item.link }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none text-primary ">
+                                        {{ item.title }}
+                                    </a>
+                                </h6>
+                                
+                                {% if item.published %}
+                                    <p class="text-muted small mb-2">
+                                        <i class="bi bi-clock"></i> Published: {{ item.published }}
+                                    </p>
+                                {% endif %}
+                                
+                                {% if item.summary %}
+                                    <p class="card-text text-dark mb-0">
+                                        {{ item.summary | safe }}
+                                    </p>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="alert alert-warning text-center m-3" role="alert">
+                        <h5 class="alert-heading">Connection Error!</h5>
+                        <p class="mb-0">Could not load the feed. Please check the URL and your connection settings.</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="card-footer text-end text-muted small">
+                Source: Ars Technica RSS Feed
+            </div>
+        </div>
+    </div>
+
+-->
+  
+  <p>
+    --
+  </p>
+{% endblock %}
+
+

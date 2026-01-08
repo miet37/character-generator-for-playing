@@ -1,0 +1,169 @@
+{% extends 'base_menu.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Fear & Greed Index</h2>
+    <p>A value of 0 means "Extreme Fear", while a value of 100 represents "Extreme Greed".</p>
+
+    <!-- Selection slicer / slider form -->
+    <form id="limitForm" class="mb-3" method="get" action="{{ url_for('blockchain_fgindex.fgindex') }}">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <label for="limitRange" class="form-label">Days to display:</label>
+            </div>
+            <div class="col">
+                <input
+                    type="range"
+                    class="form-range"
+                    id="limitRange"
+                    name="limit"
+                    min="{{ allowed_limits | min }}"
+                    max="{{ allowed_limits | max }}"
+                    step="1"
+                    value="{{ selected_limit }}"
+                    aria-describedby="limitValue"
+                >
+            </div>
+            <div class="col-auto">
+                <span id="limitValue" class="fw-bold">{{ selected_limit }}</span>
+                <button type="submit" class="btn btn-sm btn-primary ms-2">Update</button>
+            </div>
+        </div>
+
+        <!-- Quick-select buttons for common ranges -->
+        <div class="mt-2">
+            {% for opt in allowed_limits %}
+                <a href="{{ url_for('blockchain_fgindex.fgindex') }}?limit={{ opt }}" class="btn btn-sm btn-outline-secondary me-1 {% if opt == selected_limit %}active{% endif %}">
+                    {{ opt }}d
+                </a>
+            {% endfor %}
+        </div>
+    </form>
+
+    {% if error_message %}
+        <div class="alert alert-warning">{{ error_message }}</div>
+    {% endif %}
+
+    <div style="width: 100%; max-width: 900px; margin: auto;">
+        <canvas id="fgChart"></canvas>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+    {{ super() }} <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Wait for the document to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Slider logic
+            const limitRange = document.getElementById('limitRange');
+            const limitValue = document.getElementById('limitValue');
+            const limitForm = document.getElementById('limitForm');
+
+            if (limitRange && limitValue) {
+                // Update displayed value while sliding
+                limitRange.addEventListener('input', function() {
+                    limitValue.textContent = limitRange.value;
+                });
+
+                // Submit the form when slider change is committed
+                limitRange.addEventListener('change', function() {
+                    limitForm.submit();
+                });
+            }
+
+            // Get the canvas element
+            const ctx = document.getElementById('fgChart').getContext('2d');
+
+            // Data passed from Flask
+            const chartLabels = {{ labels|safe }};
+            const chartValues = {{ values|safe }};
+            const bitcoinValues = {{ bitcoin_values|safe }};
+
+            // Create the chart with two datasets:
+            // - Fear & Greed Index (left y-axis)
+            // - Bitcoin Price USD (right y-axis, red line)
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartLabels,
+                    datasets: [
+                        {
+                            label: 'Fear & Greed Index Value',
+                            data: chartValues,
+                            fill: false,
+                            borderColor: 'rgb(54, 162, 235)', // Blue line
+                            backgroundColor: 'rgb(54, 162, 235)',
+                            tension: 0.1,
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Bitcoin Price (USD)',
+                            data: bitcoinValues,
+                            fill: false,
+                            borderColor: 'rgb(255, 99, 132)', // Red line
+                            backgroundColor: 'rgb(255, 99, 132)',
+                            tension: 0.1,
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    stacked: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Daily Fear & Greed Index and Bitcoin Price'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+                            suggestedMax: 100,
+                            title: {
+                                display: true,
+                                text: 'Fear & Greed Index'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            // grid on the right y-axis should not overlap the left
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                            title: {
+                                display: true,
+                                text: 'BTC Price (USD)'
+                            }
+                        },
+                        x: {
+                            display: true,
+                            title: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

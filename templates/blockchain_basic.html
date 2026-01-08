@@ -1,0 +1,104 @@
+{% extends "base_menu.html" %}
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="display-6 text-center">Blockchain attendance</h1>
+        <p class="lead text-center">A demo of how transactions are added to a blockchain.</p>
+        
+        <hr>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-info alert-dismissible fade show border-0 shadow-sm" role="alert" >
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Student: Register your attendance</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Enter your name to create an "attendance transaction". It will be held as 'pending' until a miner validates it.</p>
+                        <!-- form -->
+                        <form action="{{ url_for('bc_basic.attend') }}" method="post">
+                            <div class="mb-3">
+                                <label for="student_name" class="form-label">Student Name</label>
+                                <input type="text" class="form-control" id="student_name" name="student_name" required>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary w-50">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Miner: Mine a New Block</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Click to perform "Proof of Work". This validates up to 3 pending records, excluding your own and adds them to a new block.</p>
+                        <div class="d-flex justify-content-center">
+                            <!-- mine button -->
+                            <a href="{{ url_for('bc_basic.mine') }}" class="btn btn-success w-50">Mine</a>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Memorypool: pending attendance transactions</h4>
+                    </div>
+                    {% if pending_transactions %}
+                    <div class="mb-4">
+                        <ul class="list-group">
+                            {% for tx in pending_transactions %}
+                            <li class="list-group-item">{{ tx.student_name }} - {{ tx.course }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <h3>The Blockchain</h3>
+                <div id="blockchain">
+                    {% for block in chain|reverse %}
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <strong>Block {{ block.index }}</strong> 
+                            {% if block.index == 1 %} <span class="badge bg-secondary">Genesis Block</span>{% endif %}
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li><strong>Timestamp:</strong> {{ datetime.fromtimestamp(block.timestamp).strftime('%Y-%m-%d %H:%M:%S') }}</li>
+                                <li><strong>Proof:</strong> <span class="text-success">{{ block.proof }}</span></li>
+                                <li><strong>Block Hash:</strong> <small class="text-primary">{{ block.block_hash }}</small></li>
+                                <li><strong>Previous Hash:</strong> <small class="text-muted">{{ block.previous_hash }}</small></li>
+                                <li><strong>Transactions:</strong>
+                                    {% if block.transactions %}
+                                        <ul class="list-group list-group-flush">
+                                        {% for tx in block.transactions %}
+                                            <li class="list-group-item list-group-item-info">{{ tx.student_name }} attended {{ tx.course }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <p class="text-muted small">No transactions in this block.</p>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

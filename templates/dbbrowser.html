@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  {% extends "base_menu.html" %}
+  {% block content %}
+  <div class="container-fluid py-3">
+    <h2>Database Browser</h2>
+    <div class="row">
+      <!-- Left: tables list -->
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-body">
+            <input id="tableFilter" class="form-control mb-2" placeholder="Filter tables..." />
+            <div id="tablesList" class="list-group" style="max-height:60vh; overflow:auto;">
+              {% if tables %}
+                {% for t in tables %}
+                  <a href="#" class="list-group-item list-group-item-action table-item" data-table="{{ t }}">{{ t }}</a>
+                {% endfor %}
+              {% else %}
+                <div class="text-muted">No tables found</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="card-footer">
+            <label for="limitSelect">Rows to show:</label>
+            <select id="limitSelect" class="form-control form-control-sm" style="width:120px; display:inline-block;">
+              <option>25</option>
+              <option selected>100</option>
+              <option>500</option>
+              <option>1000</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: table content -->
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-body">
+            <div id="tableTitle" class="mb-2"><strong>Select a table from the left</strong></div>
+            <div id="tableAlert"></div>
+            <div id="tableContainer" style="overflow:auto; max-height:70vh;">
+              <table id="dataGrid" class="table table-sm table-striped table-bordered">
+                <thead id="dataHeader"></thead>
+                <tbody id="dataBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button id="refreshBtn" class="btn btn-sm btn-outline-primary">Refresh</button>
+            <a id="downloadCsv" class="btn btn-sm btn-outline-secondary" href="#" target="_blank">Download CSV</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    const tableItems = document.querySelectorAll('.table-item');
+    const tableTitle = document.getElementById('tableTitle');
+    const dataHeader = document.getElementById('dataHeader');
+    const dataBody = document.getElementById('dataBody');
+    const tableFilter = document.getElementById('tableFilter');
+    const limitSelect = document.getElementById('limitSelect');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const downloadCsv = document.getElementById('downloadCsv');
+    let currentTable = null;
+
+    function setActive(el) {
+      tableItems.forEach(i => i.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function renderGrid(columns, rows) {
+      // header
+      dataHeader.innerHTML = '';
+      const headRow = document.createElement('tr');
+      columns.forEach(c => {
+        const th = document.createElement('th');
+        th.textContent = c;
+        headRow.appendChild(th);
+      });
+      dataHeader.appendChild(headRow);
+
+      // body
+      dataBody.innerHTML = '';
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        columns.forEach(c => {
+          const td = document.createElement('td');
+          let v = r[c];
+          if (v === null || v === undefined) v = '';
+          td.textContent = String(v);
+          tr.appendChild(td);
+        });
+        dataBody.appendChild(tr);
+      });
+    }
+
+    async function loadTable(tableName) {
+      if (!tableName) return;
+      currentTable = tableName;
+      tableTitle.innerHTML = `<strong>Table:</strong> ${tableName}`;
+      const limit = limitSelect.value || 100;
+      document.getElementById('tableAlert').innerHTML = '<div class="text-muted">Loading...</div>';
+      try {
+        const resp = await fetch(`/dbbrowser/data/${encodeURIComponent(tableName)}?limit=${limit}`, {cache: 'no-store'});
+        if (!resp.ok) {
+          const err = await resp.json().catch(()=>({error:resp.statusText}));
+          document.getElementById('tableAlert').innerHTML = `<div class="alert alert-danger small">Error: ${err.error || resp.statusText}</div>`;
+          dataHeader.innerHTML = '';
+          dataBody.innerHTML = '';
+          return;
+        }
+        const payload = await resp.json();
+        document.getElementById('tableAlert').innerHTML = `<div class="text-muted small">Showing ${payload.count} rows (limit ${limit})</div>`;
+        renderGrid(payload.columns, payload.rows);
+        // update download link
+        downloadCsv.href = `/dbbrowser/export/${encodeURIComponent(tableName)}?limit=${limit}`;
+        downloadCsv.style.display = 'inline-block';
+      } catch (e) {
+        document.getElementById('tableAlert').innerHTML = `<div class="alert alert-danger small">Error: ${e}</div>`;
+      }
+    }
+
+    // attach click handlers
+    tableItems.forEach(item=>{
+      item.addEventListener('click', (ev)=>{
+        ev.preventDefault();
+        setActive(item);
+        loadTable(item.dataset.table);
+      });
+    });
+
+    // filter tables client-side
+    tableFilter.addEventListener('input', (ev)=>{
+      const q = ev.target.value.toLowerCase();
+      tableItems.forEach(i=>{
+        const name = i.dataset.table.toLowerCase();
+        i.style.display = name.includes(q) ? '' : 'none';
+      });
+    });
+
+    // refresh
+    refreshBtn.addEventListener('click', (ev)=>{
+      if (currentTable) loadTable(currentTable);
+    });
+
+    // change rows limit reload
+    limitSelect.addEventListener('change', (ev)=>{
+      if (currentTable) loadTable(currentTable);
+    });
+
+    // auto-select first table
+    if (tableItems.length>0) {
+      setActive(tableItems[0]);
+      loadTable(tableItems[0].dataset.table);
+    }
+  })();
+  </script>
+
+  {% endblock %}
+</html>

@@ -1,0 +1,38 @@
+{% extends "base_menu.html" %}
+{% block content %}
+<div class="row mt-4">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-header">
+        CSV files
+      </div>
+      <ul class="list-group list-group-flush" id="file-list">
+        {% if files %}
+          {% for f in files %}
+            <li class="list-group-item">
+              <a href="#" class="data-file-link" data-fname="{{ f }}">{{ f }}</a>
+            </li>
+          {% endfor %}
+        {% else %}
+          <li class="list-group-item text-muted">No CSV files in configured folder.</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-9">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span id="preview-title">Preview</span>
+        <div>
+          <a id="download-link" href="#" class="btn btn-sm btn-outline-secondary" style="display:none;" target="_blank">Download</a>
+        </div>
+      </div>
+      <div class="card-body" id="preview-area">
+        <p class="text-muted">Select a CSV file from the left to see the first 50 rows here.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/data_browser.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base_menu.html" %}
+{% block title %}form1{% endblock %}
+
+{% block content %}
+  <p class="important">
+  </p>
+  
+  <h4>Register attendance</h4>
+
+
+  <hr>
+
+  <form action="#" method="post">
+    <fieldset>
+    
+
+        <div class="mb-3 col-md-6">
+          <label for="przedmiot_bs" class="form-label">Przedmiot:</label>
+          <select id="przedmiot_bs" name="przedmiot_data" class="form-control" >
+            {% for s in subjects %}
+                <option value="{{ s.przedmiot_id }}::{{ s.przedmiot }}">{{ s.przedmiot }}</option>
+            {% endfor %}
+          </select>
+        </div>
+                  
+        <div class="mb-3 col-md-6">
+          <label for="imie_bootstrap" class="form-label">Imię</label>
+          <input type="text" class="form-control" id="imie_bs" name="imie" placeholder="np. Jan" required>
+        </div>
+
+        <div class="mb-3 col-md-6">
+          <label for="nazwisko_bootstrap" class="form-label">Nazwisko</label>
+          <input type="text" class="form-control" id="nazwisko_bs" name="nazwisko" placeholder="np. Kowalski" required>
+        </div>
+
+        <div class="mb-3 col-md-6">
+            <label for="album_bootstrap" class="form-label">Numer albumu</label>
+            <input type="number" class="form-control" id="album_bs" name="numer_albumu" placeholder="np. 12345" required>
+        </div>
+
+        <div class="mb-3 col-md-6">
+            <label for="uwagi_bootstrap" class="form-label">Uwagi (max 100 znaków)</label>
+            <textarea class="form-control" id="uwagi_bs" name="uwagi" rows="3" maxlength="100"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Zapisz</button>
+    </fieldset>
+  </form>
+
+{% endblock %}

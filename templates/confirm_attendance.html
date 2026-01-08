@@ -1,0 +1,9 @@
+{% extends "base_menu.html" %}
+{% block title %}Potwierdzenie rejestracji{% endblock %}
+{% block content %}
+  <div class="container">
+    <h2>Dziękujemy za rejestrację obecności!</h2>
+    <p>Twoja obecność została pomyślnie zarejestrowana.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('index') }}">Powrót do strony głównej</a>
+{% endblock %}

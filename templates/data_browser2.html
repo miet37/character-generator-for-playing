@@ -1,0 +1,52 @@
+{% extends "base_menu.html" %}
+{% block content %}
+<div class="row mt-4">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-header">
+        CSV files 2
+      </div>
+      <ul class="list-group list-group-flush">
+        {% if files %}
+          {% for f in files %}
+            {# build a real link to the same index route with a name query parameter #}
+            <li class="list-group-item {% if selected == f %}active{% endif %}">
+              <a href="{{ url_for('data_browser.index', name=f) }}" class="text-decoration-none {% if selected == f %}text-dark{% endif %}">
+                {{ f }}
+              </a>
+            </li>
+          {% endfor %}
+        {% else %}
+          <li class="list-group-item text-muted">No CSV files in configured folder.</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-9">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span id="preview-title">
+          {% if selected %}Preview: {{ selected }}{% else %}Preview{% endif %}
+        </span>
+        <div>
+          {% if selected %}
+            <a href="{{ url_for('data_browser.download_file', filename=selected) }}" class="btn btn-sm btn-outline-secondary" target="_blank">Download</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card-body">
+        {% if error %}
+          <div class="alert alert-danger">{{ error }}</div>
+        {% elif table_html %}
+          {{ table_html | safe }}
+        {% elif selected %}
+          <p class="text-muted">No preview available for this file.</p>
+        {% else %}
+          <p class="text-muted">Select a CSV file from the left to see the first 50 rows here.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+    <head>
+    {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        {% block styles %}
+            {{ bootstrap.load_css() }}
+            <link rel="stylesheet" href="{{ url_for('static', filename='custom_style.css') }}">
+        {% endblock %}
+
+        <title>Att</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='system/favicon_at.ico') }}">
+    {% endblock %}
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-md navbar-light bg-light">
+          <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index')}}">
+                <img src="{{ url_for('static', filename='system/att-logo.png') }}" 
+                     alt="Attendance register" 
+                     height="30">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                  <a class="nav-link" href="/form3">
+                    Register attendance
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="/live_chart">
+                    Live_chart
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="/chart">
+                    Charts
+                  </a>
+                </li>
+                
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCharts"
+                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    One-page programs
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownCharts">
+                    <li><a class="dropdown-item" href="/recipe">Recipe register js</a></li>
+                    <li><a class="dropdown-item" href="/recipe2">Recipe register html</a></li>
+                    <li><a class="dropdown-item" href="/form3">Attendance register</a></li>
+                    
+                  </ul>
+                </li>
+                
+
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCharts"
+                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Blockchain
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownCharts">
+                    <li><a class="dropdown-item" href="/bc_basic">Blockchain basic</a></li>
+                    <li><a class="dropdown-item" href="/fgindex">fg index</a></li>
+                    
+                  </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCharts"
+                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Formularze
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownCharts">
+                    <li><a class="dropdown-item" href="/form1">Formularz klasyczny</a></li>
+                    <li><a class="dropdown-item" href="/form2">Formularz klas z zapisem do csv/json</a></li>
+                    <li><a class="dropdown-item" href="/form3">Formularz bootsrtap --> SQLite </a></li>
+                    <li><a class="dropdown-item" href="/attendance">Attendance table</a></li>
+                    <li><a class="dropdown-item" href="/admin/upload_students">Upload students</a></li>
+                    <li><a class="dropdown-item" href="/upload_file">Upload file</a></li>
+                    <div class="dropdown-divider"></div>
+                    <li><a class="dropdown-item" href="/dbbrowser">dbbrowser</a></li>
+                    <li><a class="dropdown-item" href="/data_browser">data_browser</a></li>
+                    <li><a class="dropdown-item" href="/data_browser">data_browser2</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <div class="container">
+            {% block content %}
+               <!-- Your page content -->
+            {% endblock %}
+        </div>
+
+        <footer class="navbar navbar-light bg-light mt-4">
+          <div class="container">
+            <span class="navbar-text">
+              &copy; Programowanie zaawansowane, M.Pawłowski, mietwood.com {{ year or 2033 }}
+            </span>
+          </div>
+        </footer>
+
+        {% block scripts %}
+          {{ bootstrap.load_js() }}
+        {% endblock %}
+
+    </body>
+</html>

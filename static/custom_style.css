@@ -1,0 +1,30 @@
+.navbar-nav .nav-link:hover {
+    background-color: #d4edda; /* #e3f2fd  Light blue background */
+    border-radius: 4px;        /* Optional: rounded corners */
+    transition: background-color 0.3s ease;
+}
+
+/* #f8d7da for light red, #d4edda for light green, #fff3cd for light yellow */
+
+/* Custom CSS to differentiate the label style */
+.form-label-subtle {
+  /* 1. Subtle Color */
+  color: #6c757d; /* Bootstrap secondary color */
+  
+  /* 2. Weight Adjustment */
+  font-weight: 400; /* Use normal/regular weight instead of default bold */
+  
+  /* 3. Size Reduction (Optional) */
+  font-size: 0.9em; 
+  
+  /* 4. Text Style (Optional but good practice) */
+  /* text-transform: uppercase; */
+  /* letter-spacing: 0.5px; */
+}
+
+/* Ensure the input itself remains visually strong (Bootstrap handles this well) */
+.form-control {
+  border-width: 1px;
+  border-color: #ced4da; /* A clear, solid border */
+  box-shadow: none;
+}
