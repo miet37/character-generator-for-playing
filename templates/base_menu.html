@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         {% block styles %}
-            {{ bootstrap.load_css() }}
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
             <link rel="stylesheet" href="{{ url_for('static', filename='custom_style.css') }}">
         {% endblock %}
 
@@ -49,6 +49,12 @@
                     Charts
                   </a>
                 </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="/letter_picker">
+                    Letter Picker
+                  </a>
+                </li>
                 
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCharts"
@@ -59,6 +65,7 @@
                     <li><a class="dropdown-item" href="/recipe">Recipe register js</a></li>
                     <li><a class="dropdown-item" href="/recipe2">Recipe register html</a></li>
                     <li><a class="dropdown-item" href="/form3">Attendance register</a></li>
+                    <li><a class="dropdown-item" href="/letter_picker">Letter Picker Game</a></li>
                     
                   </ul>
                 </li>
@@ -114,7 +121,7 @@
         </footer>
 
         {% block scripts %}
-          {{ bootstrap.load_js() }}
+          <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
         {% endblock %}
 
     </body>

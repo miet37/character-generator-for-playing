@@ -1,0 +1,100 @@
+{% extends "base_menu.html" %}
+
+{% block title %}Letter Picker{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Letter Picker Game</h3>
+                    <p class="mb-0">For Country-City-River game</p>
+                </div>
+                <div class="card-body text-center py-5">
+                    <!-- Display Area for Current Letter -->
+                    <div id="letterDisplay" class="mb-4" style="min-height: 150px; display: flex; align-items: center; justify-content: center;">
+                        {% if current_letter %}
+                            <span class="display-1 fw-bold text-primary" style="font-size: 8rem;">{{ current_letter }}</span>
+                        {% else %}
+                            <span class="text-muted fs-4">Click button to pick a letter</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Pick Letter Button -->
+                    <button id="pickButton" class="btn btn-primary btn-lg px-5 py-3 mb-4" onclick="pickLetter()">
+                        Pick the next letter
+                    </button>
+                    
+                    <!-- Already Used Letters Display -->
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <strong>Already used: </strong>
+                        <span id="usedLetters" class="text-secondary">{{ used_letters }}</span>
+                    </div>
+                    
+                    <!-- Reset Button (smaller, less prominent) -->
+                    <div class="mt-4">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="resetGame()">
+                            Reset Game
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function pickLetter() {
+    // Disable button during request
+    const button = document.getElementById('pickButton');
+    button.disabled = true;
+    
+    fetch('/pick_letter')
+        .then(response => response.json())
+        .then(data => {
+            // Update the letter display with animation
+            const letterDisplay = document.getElementById('letterDisplay');
+            letterDisplay.innerHTML = `<span class="display-1 fw-bold text-primary" style="font-size: 8rem; animation: fadeIn 0.5s;">${data.letter}</span>`;
+            
+            // Update used letters
+            document.getElementById('usedLetters').textContent = data.used_letters;
+            
+            // Re-enable button
+            button.disabled = false;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            button.disabled = false;
+        });
+}
+
+function resetGame() {
+    if (confirm('Are you sure you want to reset the game?')) {
+        fetch('/reset_game')
+            .then(response => response.json())
+            .then(data => {
+                // Clear display
+                const letterDisplay = document.getElementById('letterDisplay');
+                letterDisplay.innerHTML = '<span class="text-muted fs-4">Click button to pick a letter</span>';
+                
+                // Clear used letters
+                document.getElementById('usedLetters').textContent = '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+}
+
+// Add CSS animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.8); }
+        to { opacity: 1; transform: scale(1); }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}
