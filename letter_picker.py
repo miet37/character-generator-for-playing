@@ -16,12 +16,17 @@ def letter_picker():
                          current_letter=session['current_letter'],
                          used_letters=', '.join(session['used_letters']))
 
-@letter_picker_bp.route('/pick_letter')
+@letter_picker_bp.route('/pick_letter', methods=['POST'])
 def pick_letter():
     """API endpoint to pick a random letter"""
     # Initialize session if needed
     if 'used_letters' not in session:
         session['used_letters'] = []
+    
+    # Move current letter to used letters if it exists
+    if 'current_letter' in session and session['current_letter']:
+        if session['current_letter'] not in session['used_letters']:
+            session['used_letters'].append(session['current_letter'])
     
     # Get all letters A-Z
     all_letters = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
@@ -34,13 +39,8 @@ def pick_letter():
         session['used_letters'] = []
         available_letters = all_letters
     
-    # Pick a random letter
+    # Pick a random letter from available letters
     new_letter = random.choice(available_letters)
-    
-    # Move current letter to used letters if it exists
-    if 'current_letter' in session and session['current_letter']:
-        if session['current_letter'] not in session['used_letters']:
-            session['used_letters'].append(session['current_letter'])
     
     # Set new current letter
     session['current_letter'] = new_letter
@@ -51,7 +51,7 @@ def pick_letter():
         'used_letters': ', '.join(session['used_letters'])
     })
 
-@letter_picker_bp.route('/reset_game')
+@letter_picker_bp.route('/reset_game', methods=['POST'])
 def reset_game():
     """Reset the game state"""
     session['used_letters'] = []

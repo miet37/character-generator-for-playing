@@ -50,14 +50,25 @@ function pickLetter() {
     const button = document.getElementById('pickButton');
     button.disabled = true;
     
-    fetch('/pick_letter')
+    fetch('/pick_letter', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
         .then(response => response.json())
         .then(data => {
-            // Update the letter display with animation
+            // Update the letter display with animation - using textContent for security
             const letterDisplay = document.getElementById('letterDisplay');
-            letterDisplay.innerHTML = `<span class="display-1 fw-bold text-primary" style="font-size: 8rem; animation: fadeIn 0.5s;">${data.letter}</span>`;
+            letterDisplay.innerHTML = '';
+            const span = document.createElement('span');
+            span.className = 'display-1 fw-bold text-primary';
+            span.style.fontSize = '8rem';
+            span.style.animation = 'fadeIn 0.5s';
+            span.textContent = data.letter;
+            letterDisplay.appendChild(span);
             
-            // Update used letters
+            // Update used letters - using textContent for security
             document.getElementById('usedLetters').textContent = data.used_letters;
             
             // Re-enable button
@@ -71,12 +82,21 @@ function pickLetter() {
 
 function resetGame() {
     if (confirm('Are you sure you want to reset the game?')) {
-        fetch('/reset_game')
+        fetch('/reset_game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 // Clear display
                 const letterDisplay = document.getElementById('letterDisplay');
-                letterDisplay.innerHTML = '<span class="text-muted fs-4">Click button to pick a letter</span>';
+                letterDisplay.innerHTML = '';
+                const span = document.createElement('span');
+                span.className = 'text-muted fs-4';
+                span.textContent = 'Click button to pick a letter';
+                letterDisplay.appendChild(span);
                 
                 // Clear used letters
                 document.getElementById('usedLetters').textContent = '';
