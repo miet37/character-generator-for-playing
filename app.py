@@ -20,7 +20,7 @@ ITEM_LIMIT = 5
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import stream_with_context, Response, jsonify
-from flask_bootstrap import Bootstrap5
+from flask_bootstrap import Bootstrap
 from datetime import datetime
 
 # pip install Flask-SQLAlchemy
@@ -58,7 +58,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'csv'}
 
-bootstrap = Bootstrap5(app)
+bootstrap = Bootstrap(app)
 
 # initialize db with app --
 db.init_app(app)
@@ -91,6 +91,10 @@ app.register_blueprint(recipe_bp)
 # ------------------------------------------
 from recipe_bp2 import recipe_bp2
 app.register_blueprint(recipe_bp2)
+
+# ------------------------------------------
+from letter_picker import letter_picker_bp
+app.register_blueprint(letter_picker_bp)
 
 
 
